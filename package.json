@@ -1,7 +1,7 @@
 {
   "name": "fast-node-switcher",
   "displayName": "Fast Node Switcher",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "baizhi958216",
   "description": "Quickly switch between Node.js versions using nvm or mise",
   "main": "./extension.js",
@@ -36,19 +36,19 @@
       }
     ],
     "configuration": {
-      "title": "Node Version Switcher",
+      "title": "Fast Node Switcher",
       "properties": {
-        "nodeVersionSwitcher.misePath": {
+        "fastNodeSwitcher.misePath": {
           "type": "string",
           "default": "",
           "description": "Custom path to mise executable (e.g., C:\\Users\\username\\AppData\\Local\\Microsoft\\WinGet\\Links\\mise.exe). Leave empty for auto-detection."
         },
-        "nodeVersionSwitcher.nvmPath": {
+        "fastNodeSwitcher.nvmPath": {
           "type": "string",
           "default": "",
           "description": "Custom path to nvm executable (nvm.exe on Windows, nvm.sh on Unix). Leave empty for auto-detection."
         },
-        "nodeVersionSwitcher.preferredTool": {
+        "fastNodeSwitcher.preferredTool": {
           "type": "string",
           "enum": [
             "auto",
@@ -58,7 +58,7 @@
           "default": "auto",
           "description": "Preferred version manager. 'auto' will use nvm if available, otherwise mise."
         },
-        "nodeVersionSwitcher.autoApplyNvmrc": {
+        "fastNodeSwitcher.autoApplyNvmrc": {
           "type": "boolean",
           "default": true,
           "description": "Automatically detect and apply .nvmrc file when opening a workspace."
