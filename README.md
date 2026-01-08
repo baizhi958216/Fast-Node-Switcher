@@ -1,21 +1,21 @@
 # Fast Node Switcher
 
-一个用于快速切换 Node.js 版本的 VSCode 扩展，支持 [nvm](https://github.com/nvm-sh/nvm)、[nvm-windows](https://github.com/coreybutler/nvm-windows)、[Volta](https://volta.sh/) 和 [mise](https://mise.jdx.dev/) 工具。
+一个用于快速切换 Node.js 版本的 VSCode 扩展，支持 [nvm](https://github.com/nvm-sh/nvm)、[nvm-windows](https://github.com/coreybutler/nvm-windows)、[fnm](https://github.com/Schniz/fnm)、[Volta](https://volta.sh/) 和 [mise](https://mise.jdx.dev/) 工具。
 
 ## 功能特性
 
-- **多工具支持**：自动检测并使用 nvm、Volta 或 mise（优先使用 nvm）
+- **多工具支持**：自动检测并使用 nvm、fnm、Volta 或 mise（优先使用 nvm）
 - **快速切换**：轻松在已安装的 Node.js 版本之间切换
 - **状态栏显示**：在状态栏显示当前使用的 Node.js 版本和管理工具
 - **安装新版本**：直接从 VSCode 安装新的 Node.js 版本
 - **全局/本地切换**：支持全局或项目级别的版本切换
-- **.nvmrc 支持**：自动检测并应用 .nvmrc 文件或 Volta package.json 配置中指定的版本
-- **自动检测**：自动检测 nvm、Volta 或 mise 是否已安装
+- **.nvmrc/.node-version 支持**：自动检测并应用 .nvmrc、.node-version 文件或 Volta package.json 配置中指定的版本
+- **自动检测**：自动检测 nvm、fnm、Volta 或 mise 是否已安装
 - **跨平台**：支持 Windows、Linux 和 macOS
 
 ## 前置要求
 
-在使用此扩展之前，你需要先安装 nvm、Volta 或 mise（至少安装其中一个）：
+在使用此扩展之前，你需要先安装 nvm、fnm、Volta 或 mise（至少安装其中一个）：
 
 ### nvm (推荐)
 
@@ -45,6 +45,52 @@ brew install nvm
 更多安装方式请参考：
 - [nvm-windows 官方文档](https://github.com/coreybutler/nvm-windows)
 - [nvm 官方文档](https://github.com/nvm-sh/nvm)
+
+### fnm
+
+#### Windows
+
+```powershell
+# 使用 winget
+winget install Schniz.fnm
+
+# 或使用 Scoop
+scoop install fnm
+
+# 或使用 Chocolatey
+choco install fnm
+```
+
+#### Linux/macOS
+
+```bash
+# 使用官方安装脚本
+curl -fsSL https://fnm.vercel.app/install | bash
+
+# 或使用 Homebrew (macOS)
+brew install fnm
+
+# 或使用 Cargo
+cargo install fnm
+```
+
+安装后需要配置 shell：
+
+```bash
+# Bash
+eval "$(fnm env --use-on-cd --shell bash)"
+
+# Zsh
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+# Fish
+fnm env --use-on-cd --shell fish | source
+
+# PowerShell
+fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
+```
+
+更多安装方式请参考 [fnm 官方文档](https://github.com/Schniz/fnm)。
 
 ### Volta
 
@@ -100,7 +146,7 @@ choco install mise
 
 ### 自定义工具路径
 
-如果扩展无法自动找到 nvm、Volta 或 mise，你可以手动配置路径：
+如果扩展无法自动找到 nvm、fnm、Volta 或 mise，你可以手动配置路径：
 
 1. 打开 VSCode 设置（`Ctrl+,` / `Cmd+,`）
 2. 搜索 "Fast Node Switcher"
@@ -112,6 +158,10 @@ choco install mise
   - Windows: `C:\Program Files\nvm\nvm.exe`
   - Unix: `/home/你的用户名/.nvm/nvm.sh`
 
+- **Fnm Path**: fnm 可执行文件路径
+  - Windows: `C:\Users\你的用户名\AppData\Local\fnm\fnm.exe`
+  - Unix: `/home/你的用户名/.local/share/fnm/fnm`
+
 - **Volta Path**: volta 可执行文件路径
   - Windows: `C:\Users\你的用户名\AppData\Local\Volta\volta.exe`
   - Unix: `/home/你的用户名/.volta/bin/volta`
@@ -120,19 +170,20 @@ choco install mise
   - Windows: `C:\Users\你的用户名\AppData\Local\Microsoft\WinGet\Links\mise.exe`
   - Unix: `/home/你的用户名/.local/bin/mise`
 
-- **Preferred Tool**: 首选工具（auto/nvm/volta/mise）
-  - `auto`: 自动选择（优先 nvm，其次 volta，最后 mise）
+- **Preferred Tool**: 首选工具（auto/nvm/fnm/volta/mise）
+  - `auto`: 自动选择（优先 nvm，其次 fnm，再次 volta，最后 mise）
   - `nvm`: 强制使用 nvm
+  - `fnm`: 强制使用 fnm
   - `volta`: 强制使用 Volta
   - `mise`: 强制使用 mise
 
-- **Auto Apply Nvmrc**: 是否自动应用 .nvmrc 文件或 Volta package.json 配置（默认：true）
+- **Auto Apply Nvmrc**: 是否自动应用 .nvmrc/.node-version 文件或 Volta package.json 配置（默认：true）
 
 ### 查找工具路径
 
 你可以在终端运行以下命令找到工具的路径：
-- Windows: `where nvm`、`where volta` 或 `where mise`
-- Linux/macOS: `which nvm`、`which volta` 或 `which mise`
+- Windows: `where nvm`、`where fnm`、`where volta` 或 `where mise`
+- Linux/macOS: `which nvm`、`which fnm`、`which volta` 或 `which mise`
 
 ## 使用方法
 
@@ -150,11 +201,25 @@ choco install mise
 3. 等待安装完成
 4. 选择是否将新安装的版本设为活动版本
 
-### 使用 .nvmrc 文件或 Volta 配置
+### 使用 .nvmrc/.node-version 文件或 Volta 配置
 
 #### 对于 nvm 和 mise
 
 在项目根目录创建 `.nvmrc` 文件，指定 Node 版本：
+
+```
+20.10.0
+```
+
+或者只指定主版本号：
+
+```
+20
+```
+
+#### 对于 fnm
+
+在项目根目录创建 `.node-version` 文件，指定 Node 版本：
 
 ```
 20.10.0
@@ -178,7 +243,7 @@ choco install mise
 }
 ```
 
-当你打开包含 .nvmrc 文件或 Volta 配置的项目时，扩展会自动询问是否切换到指定的版本。
+当你打开包含 .nvmrc、.node-version 文件或 Volta 配置的项目时，扩展会自动询问是否切换到指定的版本。
 
 ### 查看当前版本
 
@@ -208,6 +273,14 @@ choco install mise
 - `nvm install <version>` - 安装版本
 - `nvm alias default <version>` - 设置默认版本（Unix）
 
+### fnm 命令
+
+- `fnm list` - 列出已安装的版本
+- `fnm current` - 获取当前版本
+- `fnm use <version>` - 切换版本
+- `fnm install <version>` - 安装版本
+- `fnm list-remote` - 列出可安装的版本
+
 ### mise 命令
 
 - `mise ls node` - 列出已安装的版本
@@ -229,6 +302,13 @@ choco install mise
 - **全局**：使用 `nvm use <version>` 并设置为默认版本
 - **本地**：在项目目录创建 `.nvmrc` 文件
 
+### fnm
+
+- **全局**：fnm 不支持通过此扩展进行全局切换（需要 shell 环境变量支持）
+- **本地**：在项目目录创建 `.node-version` 文件，fnm 会自动检测并使用
+
+**注意**：使用 fnm 时，此扩展只会创建 `.node-version` 文件。你需要打开新的终端窗口，fnm 才会检测并切换到指定版本。
+
 ### Volta
 
 - **全局**：使用 `volta install node@<version>`，设置为全局默认版本
@@ -245,8 +325,9 @@ choco install mise
 
 1. **用户配置的首选工具**（如果设置了 `preferredTool`）
 2. **nvm** (Windows 上为 nvm-windows)
-3. **Volta**
-4. **mise**
+3. **fnm**
+4. **Volta**
+5. **mise**
 
 你可以在设置中修改 `preferredTool` 来改变这个行为。
 
@@ -301,16 +382,37 @@ vsce package
 
 nvm-windows 只支持全局切换。当选择"本地"作用域时，扩展会创建 .nvmrc 文件作为提示，但实际切换仍然是全局的。
 
+### fnm 版本切换说明
+
+fnm 通过 shell 集成来管理 Node 版本，此扩展采用以下方式支持 fnm：
+
+1. **仅支持本地（项目级别）切换**：扩展会在项目根目录创建 `.node-version` 文件
+2. **不提供全局切换选项**：因为全局切换需要 shell 环境变量支持，在 VSCode 中无法可靠实现
+3. **必须先配置 shell**：确保你的 shell 配置文件（如 `.bashrc`、`.zshrc`、`profile.ps1` 等）中已添加 `fnm env --use-on-cd` 初始化代码（参见安装说明）
+4. **版本切换需要新终端**：创建 `.node-version` 文件后，打开新的终端窗口，fnm 会自动检测并切换到指定版本
+
+如果需要全局切换 Node 版本，建议：
+- 直接在终端中使用 `fnm use <version>` 或 `fnm default <version>` 命令
+- 或者使用 nvm-windows（Windows）/ nvm（Unix），它们支持通过此扩展进行全局切换
+
 ## 相关链接
 
 - [nvm (Unix) GitHub 仓库](https://github.com/nvm-sh/nvm)
 - [nvm-windows GitHub 仓库](https://github.com/coreybutler/nvm-windows)
+- [fnm GitHub 仓库](https://github.com/Schniz/fnm)
 - [Volta 官方网站](https://volta.sh/)
 - [Volta 官方文档](https://docs.volta.sh/)
 - [mise 官方文档](https://mise.jdx.dev/)
 - [mise GitHub 仓库](https://github.com/jdx/mise)
 
 ## 更新日志
+
+### 1.0.4
+
+- 添加 fnm 支持
+- 支持 fnm .node-version 配置文件自动检测
+- 更新工具优先级：nvm > fnm > Volta > mise
+- 添加 fnm 相关配置选项
 
 ### 1.0.3
 
