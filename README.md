@@ -1,21 +1,21 @@
 # Fast Node Switcher
 
-一个用于快速切换 Node.js 版本的 VSCode 扩展，支持 [nvm](https://github.com/nvm-sh/nvm)、[nvm-windows](https://github.com/coreybutler/nvm-windows) 和 [mise](https://mise.jdx.dev/) 工具。
+一个用于快速切换 Node.js 版本的 VSCode 扩展，支持 [nvm](https://github.com/nvm-sh/nvm)、[nvm-windows](https://github.com/coreybutler/nvm-windows)、[Volta](https://volta.sh/) 和 [mise](https://mise.jdx.dev/) 工具。
 
 ## 功能特性
 
-- **多工具支持**：自动检测并使用 nvm 或 mise（优先使用 nvm）
+- **多工具支持**：自动检测并使用 nvm、Volta 或 mise（优先使用 nvm）
 - **快速切换**：轻松在已安装的 Node.js 版本之间切换
 - **状态栏显示**：在状态栏显示当前使用的 Node.js 版本和管理工具
 - **安装新版本**：直接从 VSCode 安装新的 Node.js 版本
 - **全局/本地切换**：支持全局或项目级别的版本切换
-- **.nvmrc 支持**：自动检测并应用 .nvmrc 文件中指定的版本
-- **自动检测**：自动检测 nvm 或 mise 是否已安装
+- **.nvmrc 支持**：自动检测并应用 .nvmrc 文件或 Volta package.json 配置中指定的版本
+- **自动检测**：自动检测 nvm、Volta 或 mise 是否已安装
 - **跨平台**：支持 Windows、Linux 和 macOS
 
 ## 前置要求
 
-在使用此扩展之前，你需要先安装 nvm 或 mise（至少安装其中一个）：
+在使用此扩展之前，你需要先安装 nvm、Volta 或 mise（至少安装其中一个）：
 
 ### nvm (推荐)
 
@@ -46,6 +46,33 @@ brew install nvm
 - [nvm-windows 官方文档](https://github.com/coreybutler/nvm-windows)
 - [nvm 官方文档](https://github.com/nvm-sh/nvm)
 
+### Volta
+
+#### Windows
+
+```powershell
+# 使用 winget
+winget install Volta.Volta
+
+# 或使用 Scoop
+scoop install volta
+
+# 或使用 Chocolatey
+choco install volta
+```
+
+#### Linux/macOS
+
+```bash
+# 使用官方安装脚本
+curl https://get.volta.sh | bash
+
+# 或使用 Homebrew (macOS)
+brew install volta
+```
+
+更多安装方式请参考 [Volta 官方文档](https://docs.volta.sh/guide/getting-started)。
+
 ### mise (可选)
 
 #### Linux/macOS
@@ -73,10 +100,10 @@ choco install mise
 
 ### 自定义工具路径
 
-如果扩展无法自动找到 nvm 或 mise，你可以手动配置路径：
+如果扩展无法自动找到 nvm、Volta 或 mise，你可以手动配置路径：
 
 1. 打开 VSCode 设置（`Ctrl+,` / `Cmd+,`）
-2. 搜索 "Node Version Switcher"
+2. 搜索 "Fast Node Switcher"
 3. 配置相应的路径
 
 **可用配置项：**
@@ -85,22 +112,27 @@ choco install mise
   - Windows: `C:\Program Files\nvm\nvm.exe`
   - Unix: `/home/你的用户名/.nvm/nvm.sh`
 
+- **Volta Path**: volta 可执行文件路径
+  - Windows: `C:\Users\你的用户名\AppData\Local\Volta\volta.exe`
+  - Unix: `/home/你的用户名/.volta/bin/volta`
+
 - **Mise Path**: mise 可执行文件路径
   - Windows: `C:\Users\你的用户名\AppData\Local\Microsoft\WinGet\Links\mise.exe`
   - Unix: `/home/你的用户名/.local/bin/mise`
 
-- **Preferred Tool**: 首选工具（auto/nvm/mise）
-  - `auto`: 自动选择（优先 nvm）
+- **Preferred Tool**: 首选工具（auto/nvm/volta/mise）
+  - `auto`: 自动选择（优先 nvm，其次 volta，最后 mise）
   - `nvm`: 强制使用 nvm
+  - `volta`: 强制使用 Volta
   - `mise`: 强制使用 mise
 
-- **Auto Apply Nvmrc**: 是否自动应用 .nvmrc 文件（默认：true）
+- **Auto Apply Nvmrc**: 是否自动应用 .nvmrc 文件或 Volta package.json 配置（默认：true）
 
 ### 查找工具路径
 
 你可以在终端运行以下命令找到工具的路径：
-- Windows: `where nvm` 或 `where mise`
-- Linux/macOS: `which nvm` 或 `which mise`
+- Windows: `where nvm`、`where volta` 或 `where mise`
+- Linux/macOS: `which nvm`、`which volta` 或 `which mise`
 
 ## 使用方法
 
@@ -118,7 +150,9 @@ choco install mise
 3. 等待安装完成
 4. 选择是否将新安装的版本设为活动版本
 
-### 使用 .nvmrc 文件
+### 使用 .nvmrc 文件或 Volta 配置
+
+#### 对于 nvm 和 mise
 
 在项目根目录创建 `.nvmrc` 文件，指定 Node 版本：
 
@@ -132,7 +166,19 @@ choco install mise
 20
 ```
 
-当你打开包含 .nvmrc 文件的项目时，扩展会自动询问是否切换到指定的版本。
+#### 对于 Volta
+
+在项目的 `package.json` 文件中添加 Volta 配置：
+
+```json
+{
+  "volta": {
+    "node": "20.10.0"
+  }
+}
+```
+
+当你打开包含 .nvmrc 文件或 Volta 配置的项目时，扩展会自动询问是否切换到指定的版本。
 
 ### 查看当前版本
 
@@ -169,12 +215,24 @@ choco install mise
 - `mise use node@<version>` - 切换版本
 - `mise install node@<version>` - 安装版本
 
+### Volta 命令
+
+- `volta list` - 列出已安装的版本
+- `volta list --current` - 获取当前版本
+- `volta install node@<version>` - 安装并设置为全局默认版本
+- `volta pin node@<version>` - 在项目中固定版本（写入 package.json）
+
 ## 全局 vs 本地
 
 ### nvm
 
 - **全局**：使用 `nvm use <version>` 并设置为默认版本
 - **本地**：在项目目录创建 `.nvmrc` 文件
+
+### Volta
+
+- **全局**：使用 `volta install node@<version>`，设置为全局默认版本
+- **本地**：使用 `volta pin node@<version>`，配置保存在项目的 `package.json` 文件中
 
 ### mise
 
@@ -187,7 +245,8 @@ choco install mise
 
 1. **用户配置的首选工具**（如果设置了 `preferredTool`）
 2. **nvm** (Windows 上为 nvm-windows)
-3. **mise**
+3. **Volta**
+4. **mise**
 
 你可以在设置中修改 `preferredTool` 来改变这个行为。
 
@@ -216,15 +275,16 @@ vsce package
 
 ## 系统要求
 
-- 系统中必须安装 nvm 或 mise（至少一个）
+- 系统中必须安装 nvm、Volta 或 mise（至少一个）
 - VSCode 版本 1.60.0 或更高
 
 ## 常见问题
 
 ### 工具未找到
 
-确保 nvm 或 mise 已正确安装并添加到 PATH 中。你可以在终端运行以下命令来验证：
+确保 nvm、Volta 或 mise 已正确安装并添加到 PATH 中。你可以在终端运行以下命令来验证：
 - `nvm --version` (Windows) 或 `nvm --version` (Unix)
+- `volta --version`
 - `mise --version`
 
 ### 切换版本后不生效
@@ -235,7 +295,7 @@ vsce package
 
 ### .nvmrc 不自动应用
 
-检查设置中的 "Auto Apply Nvmrc" 选项是否已启用。
+检查设置中的 "Auto Apply Nvmrc" 选项是否已启用。对于 Volta 用户，确保 package.json 中有正确的 volta 配置。
 
 ### nvm-windows 不支持本地作用域
 
@@ -245,10 +305,19 @@ nvm-windows 只支持全局切换。当选择"本地"作用域时，扩展会创
 
 - [nvm (Unix) GitHub 仓库](https://github.com/nvm-sh/nvm)
 - [nvm-windows GitHub 仓库](https://github.com/coreybutler/nvm-windows)
+- [Volta 官方网站](https://volta.sh/)
+- [Volta 官方文档](https://docs.volta.sh/)
 - [mise 官方文档](https://mise.jdx.dev/)
 - [mise GitHub 仓库](https://github.com/jdx/mise)
 
 ## 更新日志
+
+### 1.0.3
+
+- 添加 Volta 支持
+- 支持 Volta package.json 配置自动检测
+- 更新工具优先级：nvm > Volta > mise
+- 添加 Volta 相关配置选项
 
 ### 1.0.2
 

@@ -3,7 +3,7 @@ const path = require('path');
 const vscode = require('vscode');
 
 /**
- * Handler for .nvmrc file detection and automatic version switching
+ * Handler for .nvmrc file and Volta package.json detection and automatic version switching
  */
 class NvmrcHandler {
     constructor(versionManager) {
@@ -45,6 +45,53 @@ class NvmrcHandler {
     }
 
     /**
+     * Find package.json with Volta configuration by traversing up the directory tree
+     */
+    findVoltaConfig(startDir) {
+        let currentDir = startDir;
+        const root = path.parse(currentDir).root;
+
+        while (currentDir !== root) {
+            const packageJsonPath = path.join(currentDir, 'package.json');
+            if (fs.existsSync(packageJsonPath)) {
+                try {
+                    const content = fs.readFileSync(packageJsonPath, 'utf8');
+                    const packageJson = JSON.parse(content);
+                    // Check if it has volta configuration
+                    if (packageJson.volta && packageJson.volta.node) {
+                        return packageJsonPath;
+                    }
+                } catch (error) {
+                    // Invalid JSON or read error, continue searching
+                }
+            }
+            currentDir = path.dirname(currentDir);
+        }
+
+        return null;
+    }
+
+    /**
+     * Read Volta configuration from package.json
+     */
+    readVoltaConfig(packageJsonPath) {
+        try {
+            const content = fs.readFileSync(packageJsonPath, 'utf8');
+            const packageJson = JSON.parse(content);
+
+            if (packageJson.volta && packageJson.volta.node) {
+                // Remove 'v' prefix if present
+                return packageJson.volta.node.replace(/^v/, '');
+            }
+
+            return null;
+        } catch (error) {
+            console.error('Failed to read Volta config from package.json:', error);
+            return null;
+        }
+    }
+
+    /**
      * Check if current version matches the .nvmrc version
      */
     async isVersionMatching(nvmrcVersion) {
@@ -59,39 +106,60 @@ class NvmrcHandler {
     }
 
     /**
-     * Automatically apply .nvmrc when opening workspace
+     * Automatically apply .nvmrc or Volta package.json when opening workspace
      */
     async autoApplyNvmrc(workspaceFolder) {
         const config = vscode.workspace.getConfiguration('fastNodeSwitcher');
         const autoApply = config.get('autoApplyNvmrc', true);
 
         if (!autoApply) {
-            console.log('.nvmrc auto-apply is disabled');
+            console.log('Auto-apply is disabled');
             return;
         }
 
-        const nvmrcPath = this.findNvmrc(workspaceFolder);
-        if (!nvmrcPath) {
-            console.log('No .nvmrc file found');
+        let version = null;
+        let configSource = null;
+        let configPath = null;
+
+        // Check if using Volta
+        const isVolta = this.versionManager.name === 'volta';
+
+        if (isVolta) {
+            // For Volta, check package.json first
+            configPath = this.findVoltaConfig(workspaceFolder);
+            if (configPath) {
+                version = this.readVoltaConfig(configPath);
+                configSource = 'package.json (Volta)';
+            }
+        } else {
+            // For nvm/mise, check .nvmrc
+            configPath = this.findNvmrc(workspaceFolder);
+            if (configPath) {
+                version = this.readNvmrc(configPath);
+                configSource = '.nvmrc';
+            }
+        }
+
+        if (!configPath) {
+            console.log('No version configuration file found');
             return;
         }
 
-        const version = this.readNvmrc(nvmrcPath);
         if (!version) {
-            console.log('Failed to read .nvmrc version');
+            console.log('Failed to read version from configuration');
             return;
         }
 
         // Check if current version already matches
         const isMatching = await this.isVersionMatching(version);
         if (isMatching) {
-            console.log(`.nvmrc version ${version} already active`);
+            console.log(`${configSource} version ${version} already active`);
             return;
         }
 
         // Ask user if they want to switch
         const action = await vscode.window.showInformationMessage(
-            `Found .nvmrc specifying Node ${version}. Switch to this version?`,
+            `Found ${configSource} specifying Node ${version}. Switch to this version?`,
             'Yes',
             'No',
             'Always'
@@ -100,44 +168,59 @@ class NvmrcHandler {
         if (action === 'Yes' || action === 'Always') {
             try {
                 await this.versionManager.setVersion(version, 'local');
-                vscode.window.showInformationMessage(`Switched to Node ${version} from .nvmrc`);
+                vscode.window.showInformationMessage(`Switched to Node ${version} from ${configSource}`);
 
                 if (action === 'Always') {
                     // Update config to always auto-apply
                     await config.update('autoApplyNvmrc', true, vscode.ConfigurationTarget.Global);
                 }
             } catch (error) {
-                vscode.window.showErrorMessage(`Failed to apply .nvmrc: ${error.message}`);
+                vscode.window.showErrorMessage(`Failed to apply version: ${error.message}`);
             }
         } else if (action === 'No') {
             // User declined, don't ask again for this session
-            console.log('User declined .nvmrc auto-apply');
+            console.log('User declined auto-apply');
         }
     }
 
     /**
-     * Watch .nvmrc file for changes
+     * Watch .nvmrc or package.json file for changes
      */
     watchNvmrc(workspaceFolder) {
         if (this.fileWatcher) {
             this.fileWatcher.dispose();
         }
 
-        const pattern = new vscode.RelativePattern(workspaceFolder, '**/.nvmrc');
+        // Check if using Volta
+        const isVolta = this.versionManager.name === 'volta';
+
+        // Watch appropriate file based on version manager
+        const pattern = isVolta
+            ? new vscode.RelativePattern(workspaceFolder, '**/package.json')
+            : new vscode.RelativePattern(workspaceFolder, '**/.nvmrc');
+
         this.fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
 
         this.fileWatcher.onDidCreate(async (uri) => {
-            console.log('.nvmrc file created:', uri.fsPath);
+            console.log('Config file created:', uri.fsPath);
             await this.autoApplyNvmrc(workspaceFolder);
         });
 
         this.fileWatcher.onDidChange(async (uri) => {
-            console.log('.nvmrc file changed:', uri.fsPath);
-            await this.autoApplyNvmrc(workspaceFolder);
+            console.log('Config file changed:', uri.fsPath);
+            // For package.json, only react if it has Volta config
+            if (isVolta) {
+                const hasVoltaConfig = this.readVoltaConfig(uri.fsPath);
+                if (hasVoltaConfig) {
+                    await this.autoApplyNvmrc(workspaceFolder);
+                }
+            } else {
+                await this.autoApplyNvmrc(workspaceFolder);
+            }
         });
 
         this.fileWatcher.onDidDelete((uri) => {
-            console.log('.nvmrc file deleted:', uri.fsPath);
+            console.log('Config file deleted:', uri.fsPath);
         });
 
         return this.fileWatcher;
