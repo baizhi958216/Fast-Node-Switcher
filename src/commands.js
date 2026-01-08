@@ -15,19 +15,19 @@ class Commands {
      */
     register(context) {
         context.subscriptions.push(
-            vscode.commands.registerCommand('node-version-switcher.switchVersion', () => this.switchVersion())
+            vscode.commands.registerCommand('fast-node-switcher.switchVersion', () => this.switchVersion())
         );
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('node-version-switcher.showCurrentVersion', () => this.showCurrentVersion())
+            vscode.commands.registerCommand('fast-node-switcher.showCurrentVersion', () => this.showCurrentVersion())
         );
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('node-version-switcher.installVersion', () => this.installVersion())
+            vscode.commands.registerCommand('fast-node-switcher.installVersion', () => this.installVersion())
         );
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('node-version-switcher.refreshVersions', () => this.refreshVersions())
+            vscode.commands.registerCommand('fast-node-switcher.refreshVersions', () => this.refreshVersions())
         );
     }
 

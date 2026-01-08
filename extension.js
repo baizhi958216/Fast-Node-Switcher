@@ -13,7 +13,7 @@ let commands;
  * Activate the extension
  */
 async function activate(context) {
-    console.log('Node Version Switcher is now active');
+    console.log('Fast Node Switcher is now active');
 
     // Initialize tool detector
     detector = new ToolDetector();
@@ -67,7 +67,7 @@ async function activate(context) {
     // Listen for configuration changes
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration(async (event) => {
-            if (event.affectsConfiguration('nodeVersionSwitcher')) {
+            if (event.affectsConfiguration('fastNodeSwitcher')) {
                 // Re-detect tools if configuration changed
                 const newManager = await detector.detectAll();
                 if (newManager) {

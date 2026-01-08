@@ -53,7 +53,7 @@ class MiseManager extends BaseVersionManager {
      */
     async detect() {
         // Check if user has configured a custom path
-        const config = vscode.workspace.getConfiguration('nodeVersionSwitcher');
+        const config = vscode.workspace.getConfiguration('fastNodeSwitcher');
         const customPath = config.get('misePath');
 
         if (customPath && fs.existsSync(customPath)) {

@@ -56,7 +56,7 @@ class NvmWindowsManager extends BaseVersionManager {
         }
 
         // Check if user has configured a custom path
-        const config = vscode.workspace.getConfiguration('nodeVersionSwitcher');
+        const config = vscode.workspace.getConfiguration('fastNodeSwitcher');
         const customPath = config.get('nvmPath');
 
         if (customPath && fs.existsSync(customPath)) {

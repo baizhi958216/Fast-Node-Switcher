@@ -10,7 +10,7 @@ class StatusBarManager {
             vscode.StatusBarAlignment.Right,
             100
         );
-        this.statusBarItem.command = 'node-version-switcher.switchVersion';
+        this.statusBarItem.command = 'fast-node-switcher.switchVersion';
     }
 
     /**

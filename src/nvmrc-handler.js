@@ -62,7 +62,7 @@ class NvmrcHandler {
      * Automatically apply .nvmrc when opening workspace
      */
     async autoApplyNvmrc(workspaceFolder) {
-        const config = vscode.workspace.getConfiguration('nodeVersionSwitcher');
+        const config = vscode.workspace.getConfiguration('fastNodeSwitcher');
         const autoApply = config.get('autoApplyNvmrc', true);
 
         if (!autoApply) {

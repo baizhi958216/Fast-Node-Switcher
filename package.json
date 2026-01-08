@@ -1,11 +1,12 @@
 {
-  "name": "node-version-switcher",
-  "displayName": "Node Version Switcher",
+  "name": "fast-node-switcher",
+  "displayName": "Fast Node Switcher",
   "version": "1.0.1",
   "publisher": "baizhi958216",
   "description": "Quickly switch between Node.js versions using nvm or mise",
   "main": "./extension.js",
-  "repository": "https://git.peropero.net/zhi/node-version-switcher",
+  "icon": "icon.png",
+  "repository": "https://github.com/baizhi958216/fast-node-switcher",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -18,19 +19,19 @@
   "contributes": {
     "commands": [
       {
-        "command": "node-version-switcher.switchVersion",
+        "command": "fast-node-switcher.switchVersion",
         "title": "Node: Switch Version"
       },
       {
-        "command": "node-version-switcher.showCurrentVersion",
+        "command": "fast-node-switcher.showCurrentVersion",
         "title": "Node: Show Current Version"
       },
       {
-        "command": "node-version-switcher.installVersion",
+        "command": "fast-node-switcher.installVersion",
         "title": "Node: Install Version"
       },
       {
-        "command": "node-version-switcher.refreshVersions",
+        "command": "fast-node-switcher.refreshVersions",
         "title": "Node: Refresh Versions"
       }
     ],
@@ -49,7 +50,11 @@
         },
         "nodeVersionSwitcher.preferredTool": {
           "type": "string",
-          "enum": ["auto", "nvm", "mise"],
+          "enum": [
+            "auto",
+            "nvm",
+            "mise"
+          ],
           "default": "auto",
           "description": "Preferred version manager. 'auto' will use nvm if available, otherwise mise."
         },
@@ -62,7 +67,8 @@
     }
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vsce package",
+    "publish": "vsce publish"
   },
   "keywords": [
     "mise",
@@ -77,7 +83,8 @@
   "author": "baizhi958216",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/node": "^16.x",
     "@types/vscode": "^1.60.0",
-    "@types/node": "^16.x"
+    "vsce": "^2.15.0"
   }
 }
