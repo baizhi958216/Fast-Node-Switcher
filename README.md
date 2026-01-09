@@ -466,6 +466,7 @@ fnm 通过 shell 集成来管理 Node 版本，此扩展采用以下方式支持
 2. **需要 pnpm v7+**：pnpm env 命令在 pnpm v7.0.0 及以上版本中可用
 3. **版本别名支持**：支持使用 `lts`、`latest`、`nightly`、`rc` 等别名
 4. **自动安装**：如果选择的版本未安装，扩展会自动调用 `pnpm env add --global` 安装
+5. **需要结束node后台进程**: 因为pnpm需要覆盖原始文件，因此需要结束进程后再进行切换
 
 ## 相关链接
 
@@ -480,6 +481,10 @@ fnm 通过 shell 集成来管理 Node 版本，此扩展采用以下方式支持
 - [mise GitHub 仓库](https://github.com/jdx/mise)
 
 ## 更新日志
+
+### 1.0.6
+
+- 修复 pnpm 在 windows 下无法切换 Node.js 版本
 
 ### 1.0.5
 

@@ -191,12 +191,16 @@ class Commands {
                 await manager.installVersion(input);
                 vscode.window.showInformationMessage(`Node ${input} installed successfully`);
 
+                const buttons = ['Yes (Global)'];
+                if (manager.supportsScope()) {
+                    buttons.push('Yes (Local)');
+                }
+                buttons.push('No');
+
                 const use = await vscode.window.showInformationMessage(
                     `Node ${input} installed. Set as active version?`,
-                    'Yes (Global)',
-                    manager.supportsScope() ? 'Yes (Local)' : null,
-                    'No'
-                ).then(action => action);
+                    ...buttons
+                );
 
                 if (use === 'Yes (Global)') {
                     await manager.setVersion(input, 'global');

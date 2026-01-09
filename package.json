@@ -1,7 +1,7 @@
 {
   "name": "fast-node-switcher",
   "displayName": "Fast Node Switcher",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "publisher": "baizhi958216",
   "description": "Quickly switch between Node.js versions using nvm, fnm, pnpm, volta, or mise",
   "main": "./extension.js",
