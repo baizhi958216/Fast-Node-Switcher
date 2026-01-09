@@ -1,11 +1,11 @@
 {
-  "name": "mise-node-switcher",
-  "displayName": "Mise Node Version Switcher",
-  "version": "1.0.0",
+  "name": "node-version-switcher",
+  "displayName": "Node Version Switcher",
+  "version": "1.0.1",
   "publisher": "baizhi958216",
-  "description": "Quickly switch between Node.js versions using mise",
+  "description": "Quickly switch between Node.js versions using nvm or mise",
   "main": "./extension.js",
-  "repository": "https://git.peropero.net/zhi/mise-node-switcher",
+  "repository": "https://git.peropero.net/zhi/node-version-switcher",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -18,29 +18,45 @@
   "contributes": {
     "commands": [
       {
-        "command": "mise-node-switcher.switchVersion",
-        "title": "Mise: Switch Node Version"
+        "command": "node-version-switcher.switchVersion",
+        "title": "Node: Switch Version"
       },
       {
-        "command": "mise-node-switcher.showCurrentVersion",
-        "title": "Mise: Show Current Node Version"
+        "command": "node-version-switcher.showCurrentVersion",
+        "title": "Node: Show Current Version"
       },
       {
-        "command": "mise-node-switcher.installVersion",
-        "title": "Mise: Install Node Version"
+        "command": "node-version-switcher.installVersion",
+        "title": "Node: Install Version"
       },
       {
-        "command": "mise-node-switcher.refreshVersions",
-        "title": "Mise: Refresh Node Versions"
+        "command": "node-version-switcher.refreshVersions",
+        "title": "Node: Refresh Versions"
       }
     ],
     "configuration": {
-      "title": "Mise Node Switcher",
+      "title": "Node Version Switcher",
       "properties": {
-        "miseNodeSwitcher.misePath": {
+        "nodeVersionSwitcher.misePath": {
           "type": "string",
           "default": "",
           "description": "Custom path to mise executable (e.g., C:\\Users\\username\\AppData\\Local\\Microsoft\\WinGet\\Links\\mise.exe). Leave empty for auto-detection."
+        },
+        "nodeVersionSwitcher.nvmPath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to nvm executable (nvm.exe on Windows, nvm.sh on Unix). Leave empty for auto-detection."
+        },
+        "nodeVersionSwitcher.preferredTool": {
+          "type": "string",
+          "enum": ["auto", "nvm", "mise"],
+          "default": "auto",
+          "description": "Preferred version manager. 'auto' will use nvm if available, otherwise mise."
+        },
+        "nodeVersionSwitcher.autoApplyNvmrc": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect and apply .nvmrc file when opening a workspace."
         }
       }
     }
@@ -50,11 +66,13 @@
   },
   "keywords": [
     "mise",
+    "nvm",
+    "nvm-windows",
     "node",
     "nodejs",
     "version",
     "switcher",
-    "nvm"
+    "nvmrc"
   ],
   "author": "baizhi958216",
   "license": "Apache-2.0",
