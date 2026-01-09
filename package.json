@@ -92,9 +92,6 @@
   "devDependencies": {
     "@types/node": "^16.x",
     "@types/vscode": "^1.60.0",
-    "vsce": "^2.15.0"
-  },
-  "volta": {
-    "node": "23.6.0"
+    "@vscode/vsce": "^3.7.1"
   }
 }
