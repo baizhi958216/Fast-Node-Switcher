@@ -1,9 +1,9 @@
 {
   "name": "fast-node-switcher",
   "displayName": "Fast Node Switcher",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "baizhi958216",
-  "description": "Quickly switch between Node.js versions using nvm or mise",
+  "description": "Quickly switch between Node.js versions using nvm, volta, or mise",
   "main": "./extension.js",
   "icon": "icon.png",
   "repository": "https://github.com/baizhi958216/fast-node-switcher",
@@ -48,20 +48,26 @@
           "default": "",
           "description": "Custom path to nvm executable (nvm.exe on Windows, nvm.sh on Unix). Leave empty for auto-detection."
         },
+        "fastNodeSwitcher.voltaPath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to volta executable. Leave empty for auto-detection."
+        },
         "fastNodeSwitcher.preferredTool": {
           "type": "string",
           "enum": [
             "auto",
             "nvm",
+            "volta",
             "mise"
           ],
           "default": "auto",
-          "description": "Preferred version manager. 'auto' will use nvm if available, otherwise mise."
+          "description": "Preferred version manager. 'auto' will use nvm if available, otherwise volta, otherwise mise."
         },
         "fastNodeSwitcher.autoApplyNvmrc": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically detect and apply .nvmrc file when opening a workspace."
+          "description": "Automatically detect and apply .nvmrc file or Volta's package.json configuration when opening a workspace."
         }
       }
     }
@@ -74,6 +80,7 @@
     "mise",
     "nvm",
     "nvm-windows",
+    "volta",
     "node",
     "nodejs",
     "version",
@@ -86,5 +93,8 @@
     "@types/node": "^16.x",
     "@types/vscode": "^1.60.0",
     "vsce": "^2.15.0"
+  },
+  "volta": {
+    "node": "23.6.0"
   }
 }
