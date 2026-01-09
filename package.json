@@ -5,6 +5,7 @@
   "publisher": "baizhi958216",
   "description": "Quickly switch between Node.js versions using mise",
   "main": "./extension.js",
+  "repository": "https://git.peropero.net/zhi/mise-node-switcher",
   "engines": {
     "vscode": "^1.60.0"
   },
