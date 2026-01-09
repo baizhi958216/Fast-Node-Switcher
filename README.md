@@ -1,4 +1,4 @@
-# Node Version Switcher
+# Fast Node Switcher
 
 一个用于快速切换 Node.js 版本的 VSCode 扩展，支持 [nvm](https://github.com/nvm-sh/nvm)、[nvm-windows](https://github.com/coreybutler/nvm-windows) 和 [mise](https://mise.jdx.dev/) 工具。
 
@@ -145,10 +145,10 @@ choco install mise
 
 ## 命令列表
 
-- `node-version-switcher.switchVersion` - 切换 Node 版本
-- `node-version-switcher.showCurrentVersion` - 显示当前 Node 版本
-- `node-version-switcher.installVersion` - 安装新的 Node 版本
-- `node-version-switcher.refreshVersions` - 刷新版本列表
+- `fast-node-switcher.switchVersion` - 切换 Node 版本
+- `fast-node-switcher.showCurrentVersion` - 显示当前 Node 版本
+- `fast-node-switcher.installVersion` - 安装新的 Node 版本
+- `fast-node-switcher.refreshVersions` - 刷新版本列表
 
 ## 工作原理
 
@@ -203,7 +203,7 @@ choco install mise
 
 ```bash
 npm install -g @vscode/vsce
-cd node-version-switcher
+cd fast-node-switcher
 npm install
 vsce package
 ```

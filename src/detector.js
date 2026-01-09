@@ -20,7 +20,7 @@ class ToolDetector {
      */
     async detectAll() {
         const platform = os.platform();
-        const config = vscode.workspace.getConfiguration('nodeVersionSwitcher');
+        const config = vscode.workspace.getConfiguration('fastNodeSwitcher');
         const preferredTool = config.get('preferredTool', 'auto');
 
         // Initialize managers based on platform
@@ -111,7 +111,7 @@ class ToolDetector {
         } else if (action === 'Install mise') {
             vscode.env.openExternal(vscode.Uri.parse('https://mise.jdx.dev/getting-started.html'));
         } else if (action === 'Open Settings') {
-            vscode.commands.executeCommand('workbench.action.openSettings', 'nodeVersionSwitcher');
+            vscode.commands.executeCommand('workbench.action.openSettings', 'fastNodeSwitcher');
         }
     }
 }
