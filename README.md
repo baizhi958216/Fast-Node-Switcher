@@ -1,10 +1,10 @@
 # Fast Node Switcher
 
-一个用于快速切换 Node.js 版本的 VSCode 扩展，支持 [nvm](https://github.com/nvm-sh/nvm)、[nvm-windows](https://github.com/coreybutler/nvm-windows)、[fnm](https://github.com/Schniz/fnm)、[Volta](https://volta.sh/) 和 [mise](https://mise.jdx.dev/) 工具。
+一个用于快速切换 Node.js 版本的 VSCode 扩展，支持 [nvm](https://github.com/nvm-sh/nvm)、[nvm-windows](https://github.com/coreybutler/nvm-windows)、[fnm](https://github.com/Schniz/fnm)、[pnpm](https://pnpm.io/)、[Volta](https://volta.sh/) 和 [mise](https://mise.jdx.dev/) 工具。
 
 ## 功能特性
 
-- **多工具支持**：自动检测并使用 nvm、fnm、Volta 或 mise（优先使用 nvm）
+- **多工具支持**：自动检测并使用 nvm、fnm、pnpm、Volta 或 mise（优先使用 nvm）
 - **快速切换**：轻松在已安装的 Node.js 版本之间切换
 - **状态栏显示**：在状态栏显示当前使用的 Node.js 版本和管理工具
 - **安装新版本**：直接从 VSCode 安装新的 Node.js 版本
@@ -15,7 +15,7 @@
 
 ## 前置要求
 
-在使用此扩展之前，你需要先安装 nvm、fnm、Volta 或 mise（至少安装其中一个）：
+在使用此扩展之前，你需要先安装 nvm、fnm、pnpm、Volta 或 mise（至少安装其中一个）：
 
 ### nvm (推荐)
 
@@ -92,6 +92,43 @@ fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
 
 更多安装方式请参考 [fnm 官方文档](https://github.com/Schniz/fnm)。
 
+### pnpm
+
+#### Windows
+
+```powershell
+# 使用 npm
+npm install -g pnpm
+
+# 或使用 winget
+winget install pnpm
+
+# 或使用 Scoop
+scoop install nodejs-lts pnpm
+
+# 或使用 Chocolatey
+choco install pnpm
+```
+
+#### Linux/macOS
+
+```bash
+# 使用 npm
+npm install -g pnpm
+
+# 或使用官方安装脚本
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+
+# 或使用 Homebrew (macOS)
+brew install pnpm
+
+# 或使用 Corepack (Node.js 16.13+)
+corepack enable
+corepack prepare pnpm@latest --activate
+```
+
+更多安装方式请参考 [pnpm 官方文档](https://pnpm.io/installation)。
+
 ### Volta
 
 #### Windows
@@ -146,7 +183,7 @@ choco install mise
 
 ### 自定义工具路径
 
-如果扩展无法自动找到 nvm、fnm、Volta 或 mise，你可以手动配置路径：
+如果扩展无法自动找到 nvm、fnm、pnpm、Volta 或 mise，你可以手动配置路径：
 
 1. 打开 VSCode 设置（`Ctrl+,` / `Cmd+,`）
 2. 搜索 "Fast Node Switcher"
@@ -162,6 +199,10 @@ choco install mise
   - Windows: `C:\Users\你的用户名\AppData\Local\fnm\fnm.exe`
   - Unix: `/home/你的用户名/.local/share/fnm/fnm`
 
+- **Pnpm Path**: pnpm 可执行文件路径
+  - Windows: `C:\Users\你的用户名\AppData\Local\pnpm\pnpm.exe`
+  - Unix: `/usr/local/bin/pnpm` 或 `/home/你的用户名/.local/share/pnpm/pnpm`
+
 - **Volta Path**: volta 可执行文件路径
   - Windows: `C:\Users\你的用户名\AppData\Local\Volta\volta.exe`
   - Unix: `/home/你的用户名/.volta/bin/volta`
@@ -170,10 +211,11 @@ choco install mise
   - Windows: `C:\Users\你的用户名\AppData\Local\Microsoft\WinGet\Links\mise.exe`
   - Unix: `/home/你的用户名/.local/bin/mise`
 
-- **Preferred Tool**: 首选工具（auto/nvm/fnm/volta/mise）
-  - `auto`: 自动选择（优先 nvm，其次 fnm，再次 volta，最后 mise）
+- **Preferred Tool**: 首选工具（auto/nvm/fnm/pnpm/volta/mise）
+  - `auto`: 自动选择（优先 nvm，其次 fnm，再次 pnpm，然后 volta，最后 mise）
   - `nvm`: 强制使用 nvm
   - `fnm`: 强制使用 fnm
+  - `pnpm`: 强制使用 pnpm
   - `volta`: 强制使用 Volta
   - `mise`: 强制使用 mise
 
@@ -182,8 +224,8 @@ choco install mise
 ### 查找工具路径
 
 你可以在终端运行以下命令找到工具的路径：
-- Windows: `where nvm`、`where fnm`、`where volta` 或 `where mise`
-- Linux/macOS: `which nvm`、`which fnm`、`which volta` 或 `which mise`
+- Windows: `where nvm`、`where fnm`、`where pnpm`、`where volta` 或 `where mise`
+- Linux/macOS: `which nvm`、`which fnm`、`which pnpm`、`which volta` 或 `which mise`
 
 ## 使用方法
 
@@ -281,6 +323,14 @@ choco install mise
 - `fnm install <version>` - 安装版本
 - `fnm list-remote` - 列出可安装的版本
 
+### pnpm 命令
+
+- `pnpm env list` - 列出已安装的版本
+- `pnpm env use --global <version>` - 安装并切换到指定版本
+- `pnpm env add --global <version>` - 安装版本（不切换）
+- `pnpm env list --remote` - 列出可安装的版本
+- `pnpm env remove --global <version>` - 删除版本
+
 ### mise 命令
 
 - `mise ls node` - 列出已安装的版本
@@ -309,6 +359,13 @@ choco install mise
 
 **注意**：使用 fnm 时，此扩展只会创建 `.node-version` 文件。你需要打开新的终端窗口，fnm 才会检测并切换到指定版本。
 
+### pnpm
+
+- **全局**：使用 `pnpm env use --global <version>`，设置为全局默认版本
+- **本地**：pnpm 不支持项目级别的版本切换
+
+**注意**：pnpm env 只支持全局作用域。如果在扩展中选择"本地"作用域，会显示警告并使用全局作用域。
+
 ### Volta
 
 - **全局**：使用 `volta install node@<version>`，设置为全局默认版本
@@ -326,8 +383,9 @@ choco install mise
 1. **用户配置的首选工具**（如果设置了 `preferredTool`）
 2. **nvm** (Windows 上为 nvm-windows)
 3. **fnm**
-4. **Volta**
-5. **mise**
+4. **pnpm**
+5. **Volta**
+6. **mise**
 
 你可以在设置中修改 `preferredTool` 来改变这个行为。
 
@@ -356,15 +414,17 @@ vsce package
 
 ## 系统要求
 
-- 系统中必须安装 nvm、Volta 或 mise（至少一个）
+- 系统中必须安装 nvm、fnm、pnpm、Volta 或 mise（至少一个）
 - VSCode 版本 1.60.0 或更高
 
 ## 常见问题
 
 ### 工具未找到
 
-确保 nvm、Volta 或 mise 已正确安装并添加到 PATH 中。你可以在终端运行以下命令来验证：
+确保 nvm、fnm、pnpm、Volta 或 mise 已正确安装并添加到 PATH 中。你可以在终端运行以下命令来验证：
 - `nvm --version` (Windows) 或 `nvm --version` (Unix)
+- `fnm --version`
+- `pnpm --version`
 - `volta --version`
 - `mise --version`
 
@@ -400,17 +460,33 @@ fnm 通过 shell 集成来管理 Node 版本，此扩展采用以下方式支持
 1. 提示切换成功后依旧未找到node
 - 确保激活了mise的环境变量 [Activate mise](https://mise.jdx.dev/getting-started.html#activate-mise)
 
+### pnpm 版本切换说明
+
+1. **仅支持全局切换**：pnpm env 命令只支持全局作用域，不支持项目级别的版本管理
+2. **需要 pnpm v7+**：pnpm env 命令在 pnpm v7.0.0 及以上版本中可用
+3. **版本别名支持**：支持使用 `lts`、`latest`、`nightly`、`rc` 等别名
+4. **自动安装**：如果选择的版本未安装，扩展会自动调用 `pnpm env add --global` 安装
+
 ## 相关链接
 
 - [nvm (Unix) GitHub 仓库](https://github.com/nvm-sh/nvm)
 - [nvm-windows GitHub 仓库](https://github.com/coreybutler/nvm-windows)
 - [fnm GitHub 仓库](https://github.com/Schniz/fnm)
+- [pnpm 官方网站](https://pnpm.io/)
+- [pnpm 官方文档](https://pnpm.io/cli/env)
 - [Volta 官方网站](https://volta.sh/)
 - [Volta 官方文档](https://docs.volta.sh/)
 - [mise 官方文档](https://mise.jdx.dev/)
 - [mise GitHub 仓库](https://github.com/jdx/mise)
 
 ## 更新日志
+
+### 1.0.5
+
+- 添加 pnpm 支持
+- 支持 pnpm env 命令进行 Node.js 版本管理
+- 更新工具优先级：nvm > fnm > pnpm > Volta > mise
+- 添加 pnpm 相关配置选项
 
 ### 1.0.4
 
