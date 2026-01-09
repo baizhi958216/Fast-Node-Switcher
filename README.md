@@ -395,6 +395,11 @@ fnm 通过 shell 集成来管理 Node 版本，此扩展采用以下方式支持
 - 直接在终端中使用 `fnm use <version>` 或 `fnm default <version>` 命令
 - 或者使用 nvm-windows（Windows）/ nvm（Unix），它们支持通过此扩展进行全局切换
 
+### mise 版本切换说明
+
+1. 提示切换成功后依旧未找到node
+- 确保激活了mise的环境变量 [Activate mise](https://mise.jdx.dev/getting-started.html#activate-mise)
+
 ## 相关链接
 
 - [nvm (Unix) GitHub 仓库](https://github.com/nvm-sh/nvm)
