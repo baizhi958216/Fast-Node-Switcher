@@ -95,7 +95,21 @@ class Commands {
         if (!manager.supportsScope()) {
             try {
                 await manager.setVersion(version, 'global');
-                vscode.window.showInformationMessage(`Node version switched to: ${version} (global)`);
+
+                // Special message for fnm
+                if (manager.name === 'fnm') {
+                    vscode.window.showInformationMessage(
+                        `Created .node-version file with Node ${version}. Open a new terminal to use this version.`,
+                        'Open Terminal'
+                    ).then(action => {
+                        if (action === 'Open Terminal') {
+                            vscode.commands.executeCommand('workbench.action.terminal.new');
+                        }
+                    });
+                } else {
+                    vscode.window.showInformationMessage(`Node version switched to: ${version}`);
+                }
+
                 await this.statusBarManager.update();
             } catch (error) {
                 vscode.window.showErrorMessage(`Failed to set version: ${error.message}`);
