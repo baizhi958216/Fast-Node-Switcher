@@ -5,10 +5,11 @@ const NvmManager = require('./managers/nvm-manager');
 const NvmWindowsManager = require('./managers/nvm-windows-manager');
 const VoltaManager = require('./managers/volta-manager');
 const FnmManager = require('./managers/fnm-manager');
+const PnpmManager = require('./managers/pnpm-manager');
 
 /**
  * Tool detector for finding and selecting version managers
- * Priority: nvm > fnm > volta > mise (as per user requirement)
+ * Priority: nvm > fnm > pnpm > volta > mise
  */
 class ToolDetector {
     constructor() {
@@ -30,6 +31,7 @@ class ToolDetector {
             this.managers = [
                 new NvmWindowsManager(),
                 new FnmManager(),
+                new PnpmManager(),
                 new VoltaManager(),
                 new MiseManager()
             ];
@@ -37,6 +39,7 @@ class ToolDetector {
             this.managers = [
                 new NvmManager(),
                 new FnmManager(),
+                new PnpmManager(),
                 new VoltaManager(),
                 new MiseManager()
             ];
@@ -55,7 +58,7 @@ class ToolDetector {
             }
         }
 
-        // Auto-detect: try managers in priority order (nvm > fnm > volta > mise)
+        // Auto-detect: try managers in priority order (nvm > fnm > pnpm > volta > mise)
         for (const manager of this.managers) {
             const detected = await manager.detect();
             if (detected) {
@@ -101,9 +104,10 @@ class ToolDetector {
      */
     async showNoManagerError() {
         const action = await vscode.window.showErrorMessage(
-            'No version manager (nvm/fnm/volta/mise) detected. Please install one.',
+            'No version manager (nvm/fnm/pnpm/volta/mise) detected. Please install one.',
             'Install nvm',
             'Install fnm',
+            'Install pnpm',
             'Install Volta',
             'Install mise',
             'Open Settings'
@@ -118,6 +122,8 @@ class ToolDetector {
             }
         } else if (action === 'Install fnm') {
             vscode.env.openExternal(vscode.Uri.parse('https://github.com/Schniz/fnm'));
+        } else if (action === 'Install pnpm') {
+            vscode.env.openExternal(vscode.Uri.parse('https://pnpm.io/installation'));
         } else if (action === 'Install Volta') {
             vscode.env.openExternal(vscode.Uri.parse('https://volta.sh/'));
         } else if (action === 'Install mise') {

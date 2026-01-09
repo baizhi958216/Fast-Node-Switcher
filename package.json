@@ -1,9 +1,9 @@
 {
   "name": "fast-node-switcher",
   "displayName": "Fast Node Switcher",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publisher": "baizhi958216",
-  "description": "Quickly switch between Node.js versions using nvm, fnm, volta, or mise",
+  "description": "Quickly switch between Node.js versions using nvm, fnm, pnpm, volta, or mise",
   "main": "./extension.js",
   "icon": "icon.png",
   "repository": "https://github.com/baizhi958216/fast-node-switcher",
@@ -53,6 +53,11 @@
           "default": "",
           "description": "Custom path to fnm executable. Leave empty for auto-detection."
         },
+        "fastNodeSwitcher.pnpmPath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to pnpm executable. Leave empty for auto-detection."
+        },
         "fastNodeSwitcher.voltaPath": {
           "type": "string",
           "default": "",
@@ -64,11 +69,12 @@
             "auto",
             "nvm",
             "fnm",
+            "pnpm",
             "volta",
             "mise"
           ],
           "default": "auto",
-          "description": "Preferred version manager. 'auto' will use nvm if available, otherwise fnm, otherwise volta, otherwise mise."
+          "description": "Preferred version manager. 'auto' will use nvm if available, otherwise fnm, otherwise pnpm, otherwise volta, otherwise mise."
         },
         "fastNodeSwitcher.autoApplyNvmrc": {
           "type": "boolean",
@@ -87,6 +93,7 @@
     "nvm",
     "nvm-windows",
     "fnm",
+    "pnpm",
     "volta",
     "node",
     "nodejs",
