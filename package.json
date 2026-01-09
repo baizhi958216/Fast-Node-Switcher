@@ -1,0 +1,64 @@
+{
+  "name": "mise-node-switcher",
+  "displayName": "Mise Node Version Switcher",
+  "version": "1.0.0",
+  "publisher": "baizhi958216",
+  "description": "Quickly switch between Node.js versions using mise",
+  "main": "./extension.js",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "mise-node-switcher.switchVersion",
+        "title": "Mise: Switch Node Version"
+      },
+      {
+        "command": "mise-node-switcher.showCurrentVersion",
+        "title": "Mise: Show Current Node Version"
+      },
+      {
+        "command": "mise-node-switcher.installVersion",
+        "title": "Mise: Install Node Version"
+      },
+      {
+        "command": "mise-node-switcher.refreshVersions",
+        "title": "Mise: Refresh Node Versions"
+      }
+    ],
+    "configuration": {
+      "title": "Mise Node Switcher",
+      "properties": {
+        "miseNodeSwitcher.misePath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to mise executable (e.g., C:\\Users\\username\\AppData\\Local\\Microsoft\\WinGet\\Links\\mise.exe). Leave empty for auto-detection."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mise",
+    "node",
+    "nodejs",
+    "version",
+    "switcher",
+    "nvm"
+  ],
+  "author": "baizhi958216",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/node": "^16.x"
+  }
+}
