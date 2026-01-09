@@ -35,6 +35,13 @@ class Commands {
      * Switch Node version command
      */
     async switchVersion() {
+        // Check if official Node.js is installed first (priority check)
+        const officialNodePath = await this.detector.detectOfficialNodejs();
+        if (officialNodePath) {
+            await this.detector.showOfficialNodejsWarning(officialNodePath);
+            return;
+        }
+
         const manager = this.detector.getActiveManager();
         if (!manager) {
             await this.detector.showNoManagerError();
@@ -140,6 +147,13 @@ class Commands {
      * Show current Node version command
      */
     async showCurrentVersion() {
+        // Check if official Node.js is installed first (priority check)
+        const officialNodePath = await this.detector.detectOfficialNodejs();
+        if (officialNodePath) {
+            await this.detector.showOfficialNodejsWarning(officialNodePath);
+            return;
+        }
+
         const manager = this.detector.getActiveManager();
         if (!manager) {
             await this.detector.showNoManagerError();
@@ -168,6 +182,13 @@ class Commands {
      * Install Node version command
      */
     async installVersion() {
+        // Check if official Node.js is installed first (priority check)
+        const officialNodePath = await this.detector.detectOfficialNodejs();
+        if (officialNodePath) {
+            await this.detector.showOfficialNodejsWarning(officialNodePath);
+            return;
+        }
+
         const manager = this.detector.getActiveManager();
         if (!manager) {
             await this.detector.showNoManagerError();
@@ -221,6 +242,13 @@ class Commands {
      * Refresh versions command
      */
     async refreshVersions() {
+        // Check if official Node.js is installed first (priority check)
+        const officialNodePath = await this.detector.detectOfficialNodejs();
+        if (officialNodePath) {
+            await this.detector.showOfficialNodejsWarning(officialNodePath);
+            return;
+        }
+
         const manager = this.detector.getActiveManager();
         if (!manager) {
             await this.detector.showNoManagerError();

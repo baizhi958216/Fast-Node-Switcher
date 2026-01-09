@@ -212,7 +212,7 @@ choco install mise
   - Unix: `/home/你的用户名/.local/bin/mise`
 
 - **Preferred Tool**: 首选工具（auto/nvm/fnm/pnpm/volta/mise）
-  - `auto`: 自动选择（优先 nvm，其次 fnm，再次 pnpm，然后 volta，最后 mise）
+  - `auto`: 自动选择（优先 nvm，其次 fnm，再次 volta，然后 mise，最后 pnpm）
   - `nvm`: 强制使用 nvm
   - `fnm`: 强制使用 fnm
   - `pnpm`: 强制使用 pnpm
@@ -383,9 +383,9 @@ choco install mise
 1. **用户配置的首选工具**（如果设置了 `preferredTool`）
 2. **nvm** (Windows 上为 nvm-windows)
 3. **fnm**
-4. **pnpm**
-5. **Volta**
-6. **mise**
+4. **Volta**
+5. **mise**
+6. **pnpm**
 
 你可以在设置中修改 `preferredTool` 来改变这个行为。
 
@@ -481,6 +481,11 @@ fnm 通过 shell 集成来管理 Node 版本，此扩展采用以下方式支持
 - [mise GitHub 仓库](https://github.com/jdx/mise)
 
 ## 更新日志
+
+### 1.0.7
+
+- 更新 Node.js 使用了官方安装包的提示
+- 调整工具优先级：nvm > fnm > Volta > mise > pnpm
 
 ### 1.0.6
 
